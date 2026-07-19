@@ -1,32 +1,24 @@
-import { Bell, Search, MapPin, User } from "lucide-react";
+import { Bell, Search, User } from "lucide-react";
+import { FarmSelector } from "@/features/farm/components/FarmSelector";
+import { useAuthStore } from "@/store/auth-store";
 
 export function TopNavigation() {
+  const { user } = useAuthStore();
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-border bg-background px-8">
       <div className="flex items-center gap-6">
         <div>
-          <h2 className="text-sm font-semibold text-foreground">Good Morning, Devesh</h2>
+          <h2 className="text-sm font-semibold text-foreground">
+            Good Morning, {user?.displayName || user?.email?.split('@')[0] || "Farmer"}
+          </h2>
           <p className="text-xs text-muted-foreground">Here is what to do next.</p>
         </div>
         
         <div className="hidden h-8 w-px bg-border md:block" />
         
         <div className="hidden items-center gap-4 md:flex">
-          <div className="flex items-center gap-2 text-sm text-foreground">
-            <span className="font-medium">Green Valley Farm</span>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <MapPin className="h-3.5 w-3.5" />
-            <span>Punjab, India</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-secondary/10 px-2 py-0.5 text-xs font-medium text-secondary">
-              Tomatoes
-            </span>
-            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-              Flowering Stage
-            </span>
-          </div>
+          <FarmSelector />
         </div>
       </div>
 

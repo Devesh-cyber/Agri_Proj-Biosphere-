@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuthStore } from "@/store/auth-store";
+import { useFarmStore } from "@/features/farm/store/farm-store";
 import { verifyTokenWithBackend } from "@/lib/auth-service";
 import { apiClient } from "@/lib/axios";
 
@@ -23,6 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   const { setUser, setLoading } = useAuthStore();
+  const { loadFarms } = useFarmStore();
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -41,6 +43,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
             displayName: firebaseUser.displayName,
             photoURL: firebaseUser.photoURL,
           });
+
+          // Load user farms
+          await loadFarms();
         } else {
           delete apiClient.defaults.headers.common["Authorization"];
           setUser(null);
@@ -54,7 +59,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [setUser, setLoading]);
+  }, [setUser, setLoading, loadFarms]);
 
   return (
     <NextThemesProvider
